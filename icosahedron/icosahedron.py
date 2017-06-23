@@ -40,7 +40,7 @@ class IcoSphere:
         self._addPoint(np.array([ 0,-1, t]))
         self._addPoint(np.array([ 0, 1, t]))
         self._addPoint(np.array([ 0,-1,-t]))
-        self._addPoint(np.array([ 0,-1,-t]))
+        self._addPoint(np.array([ 0, 1,-t]))
         self._addPoint(np.array([ t, 0,-1]))
         self._addPoint(np.array([ t, 0, 1]))
         self._addPoint(np.array([-t, 0,-1]))
@@ -124,6 +124,21 @@ class IcoSphere:
             midPointDict[key] = self.points[-1] 
         return midPointDict[key]
         
+    def plot3d(self):
+        """Matplotlib 3D plot of mesh"""
+        import matplotlib.pyplot as plt
+        from mpl_toolkits.mplot3d import Axes3D
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        xyz = np.asarray([ pt.xyz for pt in self.points ])
+        x = xyz[:,0]
+        y = xyz[:,1]
+        z = xyz[:,2]
+        ts = np.asarray([ [ p.idx for p in t.pts ] for t in self.triangles ])
+        ax.plot_trisurf(x,y,ts,z)
+        plt.show()
+        
+        
         
 class Triangle:
     """A triangle adjoining three adjacent points"""
@@ -148,7 +163,8 @@ class Point:
         else:
             # ensure length equals 1 and add to list of points
             self.xyz = (xyz/np.linalg.norm(xyz))
-            self.idx = idx 
+            self.idx = idx
+            
         
 def calculate_npts(level):
     n = 2**level
@@ -158,4 +174,28 @@ def calculate_nfaces(level):
     n = 2**level
     return 20 * n**2
     
-    
+def cart2geo(x, y, z):
+    """convert x y z cartesian coordinates to latitude longitude radius
+       xyz is a numpy array, a right handed co-ordinate system is assumed with 
+       -- x-axis going through the equator at 0 degrees longitude
+       -- y-axis going through the equator at 90 degrees longitude 
+       -- z-axis going through the north pole."""
+    r = np.sqrt(x**2 + y**2 + z**2)
+    lon = np.rad2deg(np.arctan2(y,x))
+    lat = np.rad2deg(np.arcsin(z/r))
+    return lat, lon, r
+
+def geo2cart(lat, lon, r):
+    """convert latitude longitude radius to x y z cartesian coordinates
+       xyz is a numpy array, a right handed co-ordinate system is assumed with 
+       -- x-axis going through the equator at 0 degrees longitude
+       -- y-axis going through the equator at 90 degrees longitude 
+       -- z-axis going through the north pole."""    
+    x = r * np.cos(lon) * np.cos(lat)
+    y = r * np.sin(lon) * np.cos(lat)
+    z = r * np.sin(lat)
+    return x, y, z
+
+# def xyzToLatLonR(xyz):
+#     trans = np.array([np.])
+      
