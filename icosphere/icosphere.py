@@ -7,7 +7,14 @@ import numpy as np
 # Icosphere -> Triangle -> Point
 
 class IcoSphere:
-    """A collection of triangles and list of all points"""
+    """
+    Usage: IcoSphere(level)
+    Maximum supported level = 8
+    
+    get started with:
+    >>> A = IcoSphere(3)
+    ... A.plot3d()
+    """
     
     # maximum level for subdivision of the icosahedron
     maxlevel = 8

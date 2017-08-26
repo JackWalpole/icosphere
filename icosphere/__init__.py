@@ -1,1 +1,1 @@
-from . import icosahedron
+from .icosphere import IcoSphere,Triangle,Point
