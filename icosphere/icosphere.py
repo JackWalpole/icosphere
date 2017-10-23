@@ -145,6 +145,12 @@ class IcoSphere:
         ax.plot_trisurf(x,y,ts,z)
         plt.show()
         
+    def dump_xyz(self):
+        [ print(*pt.xyz) for pt in self.points ]
+        
+    def dump_latlonr(self):
+        [ print(*cart2geo(*pt.xyz)) for pt in self.points ]
+        
         
         
 class Triangle:
